@@ -68,7 +68,7 @@ return {
 			else
 				cb({
 					type = "executable",
-					command = "path/to/virtualenvs/debugpy/bin/python",
+					command = "/home/timos/.virtualenvs/debugpy/bin/python",
 					args = { "-m", "debugpy.adapter" },
 					options = {
 						source_filetype = "python",
