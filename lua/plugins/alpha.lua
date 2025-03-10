@@ -1,4 +1,4 @@
--- vim.diagnostic.enable(false)
+vim.diagnostic.enable(false)
 return {
 	{
 		"goolord/alpha-nvim",
