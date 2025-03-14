@@ -1,3 +1,4 @@
+vim.g.mapleader = " "
 vim.g.python3_host_prog = "~/.venv/bin/python"
 
 vim.cmd("set number")
@@ -9,10 +10,13 @@ vim.o.wrap = false
 vim.o.swapfile = false
 vim.o.backup = false
 
+vim.opt.expandtab = true
 vim.cmd("set autoindent")
 vim.cmd("set tabstop=4")
 vim.cmd("set shiftwidth=4")
 vim.cmd("set softtabstop=4")
+
+vim.cmd("setlocal list")
 
 vim.cmd("set scrolloff=10")
 vim.o.signcolumn = "yes"
@@ -24,5 +28,3 @@ vim.cmd("set termguicolors")
 
 vim.o.hlsearch = false
 vim.o.incsearch = true
-
-

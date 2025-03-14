@@ -1,5 +1,5 @@
-require("Timos.remap")
 require("Timos.vimOpts")
+require("Timos.remap")
 
 local function printArt(art)
   for _,v in pairs(art) do
@@ -10,8 +10,6 @@ end
 vim.cmd("highlight MyArtColor guifg=#f9e2af")
 
 local asciiArt1 = {
-[[                                                                                                                                                                                                                                         ]],
-[[                                                             ♪                                                     ♬                                                                                     ♩                                 ]],
 [[                            ♫                                                    ♩                                                  ♪                                                                                                      ]],
 [[                                         ♬                                                     ♪                                                   ♫                                                                                       ]],
 [[                                    ♩                                        ♫                                                                                       ♬                                                                     ]],
