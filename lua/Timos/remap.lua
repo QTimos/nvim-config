@@ -2,8 +2,8 @@ vim.keymap.set("n", "<leader>w", function()
     whitespace_enabled = not whitespace_enabled
     if whitespace_enabled then
         vim.opt.list = true
-		vim.cmd("highlight Whitespace guifg=#6b6e85")
-		vim.opt.listchars = "space:.,tab:>>,trail:·,extends:❯,precedes:❮,nbsp:+"
+        vim.cmd("highlight Whitespace guifg=#6b6e85")
+        vim.opt.listchars = "space:.,tab:>>,trail:·,extends:❯,precedes:❮,nbsp:+"
     else
         vim.opt.list = false
     end
@@ -41,4 +41,6 @@ vim.keymap.set("i", "<4-MiddleMouse>", "<Nop>")
 
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 vim.keymap.set("n", "<leader>S", ":s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<leader>od", ":execute '!tmux split-window -v -c ' . shellescape(expand('%:p:h'))<CR>")

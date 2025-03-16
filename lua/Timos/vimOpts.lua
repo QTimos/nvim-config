@@ -5,6 +5,7 @@ vim.cmd("set number")
 vim.cmd("set relativenumber")
 vim.cmd("set colorcolumn=200")
 vim.cmd("set updatetime=40")
+vim.cmd("set cmdheight=2")
 vim.o.wrap = false
 
 vim.o.swapfile = false
