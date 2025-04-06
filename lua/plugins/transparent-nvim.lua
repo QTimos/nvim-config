@@ -33,6 +33,12 @@ return {
             -- table: additional groups that should be cleared
             extra_groups = {
                 "NeoTreeNormal",
+                "NeoTreeFloatBorder",
+                "NeoTreeFloatNormal",
+                "NeoTreeFloatTitle",
+                "NeoTreeNormalNC",
+                "FloatBorder",
+                "Borders",
             },
             on_clear = function() end,
         })
