@@ -44,3 +44,13 @@ vim.keymap.set("n", "<leader>S", ":s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><
 
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>od", ":execute '!tmux split-window -v -c ' . shellescape(expand('%:p:h'))<CR>")
+
+vim.keymap.set("n", "<leader>bt", function()
+    local file_dir = vim.fn.expand("%:p:h")
+    local file_name = vim.fn.expand("%:t")
+    vim.cmd("cd " .. vim.fn.escape(file_dir, " "))
+    vim.cmd("silent !browse " .. vim.fn.escape(file_name, " "))
+end, { noremap = true })
+vim.keymap.set("n", "<leader>bc", ":!compile %:t<CR>")
+vim.keymap.set("n", "<leader>r", ":!python %:t<CR>")
+

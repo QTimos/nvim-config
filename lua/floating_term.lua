@@ -1,44 +1,35 @@
--- Floating Terminal Configuration
--- Add this to your init.lua or create a separate file and require it
-
--- Configuration options
 local config = {
   width = 0.9,
   height = 0.9,
   border = 'rounded',
-  winblend = 10, -- Slightly transparent
+  winblend = 10,
   shell = nil,
   toggle_keymap = '<C-<>',
   terminal_mappings = true,
   
-  -- Visual enhancements
-  border_color = "FloatingTermBorder", -- Nord-themed border highlight
-  float_hl = "FloatingTermBackground", -- Nord-themed background
-  background_color = nil, -- use nil for transparent
+  border_color = "FloatingTermBorder",
+  float_hl = "FloatingTermBackground",
+  background_color = nil,
   padding = {
     top = 1,
-    right = 2,
+    right = 6,
     bottom = 1, 
-    left = 2
+    left = 6
   },
   title = " Terminal ",
-  title_pos = "center", -- 'left', 'center', or 'right'
+  title_pos = "center",
 }
 
--- Function to create a floating window
 local function create_float_window()
   local width = math.floor(vim.o.columns * config.width)
   local height = math.floor(vim.o.lines * config.height)
   
-  -- Calculate starting position to center the window
   local row = math.floor((vim.o.lines - height) / 2)
   local col = math.floor((vim.o.columns - width) / 2)
   
-  -- Adjust dimensions for padding
   local content_width = width - config.padding.left - config.padding.right
   local content_height = height - config.padding.top - config.padding.bottom
   
-  -- Window options
   local opts = {
     relative = 'editor',
     row = row,

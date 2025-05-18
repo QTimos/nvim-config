@@ -13,11 +13,28 @@ return {
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local keymap = vim.keymap
 
-		local show_non_error_diagnostics = false
+		_G.lsp_diagnostics_config = {
+			show_non_error_diagnostics = false
+		}
+
 		local function toggle_non_error_diagnostics()
-			show_non_error_diagnostics = not show_non_error_diagnostics
-			vim.notify("Non-error diagnostics " .. (show_non_error_diagnostics and "enabled" or "disabled"))
-			vim.diagnostic.reset()
+			_G.lsp_diagnostics_config.show_non_error_diagnostics = not _G.lsp_diagnostics_config.show_non_error_diagnostics
+			
+			vim.notify("Non-error diagnostics " .. (_G.lsp_diagnostics_config.show_non_error_diagnostics and "enabled" or "disabled"))
+			
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				if vim.api.nvim_buf_is_loaded(bufnr) then
+					vim.diagnostic.reset(nil, bufnr)
+					
+					local ns = vim.diagnostic.get_namespaces()
+					for ns_id, _ in pairs(ns) do
+						local diagnostics = vim.diagnostic.get(bufnr, {namespace = ns_id})
+						if diagnostics and #diagnostics > 0 then
+							vim.diagnostic.set(ns_id, bufnr, diagnostics)
+						end
+					end
+				end
+			end
 		end
 
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -48,28 +65,47 @@ return {
 			end,
 		})
 
+		-- Client capabilities
 		local capabilities = cmp_nvim_lsp.default_capabilities()
 
-		local custom_diagnostics_handler = function(_, result, ctx, config)
-			if not show_non_error_diagnostics then
-				local filtered_diagnostics = {}
-				for _, diagnostic in ipairs(result.diagnostics or {}) do
-					if diagnostic.severity == vim.diagnostic.severity.ERROR then
-						table.insert(filtered_diagnostics, diagnostic)
+		-- Filter function that keeps only error diagnostics unless show_non_error_diagnostics is true
+		local function filter_diagnostics(diagnostics)
+			if not diagnostics then return {} end
+			
+			if not _G.lsp_diagnostics_config.show_non_error_diagnostics then
+				local filtered = {}
+				for _, d in ipairs(diagnostics) do
+					if d.severity == vim.diagnostic.severity.ERROR then
+						table.insert(filtered, d)
 					end
 				end
-				result.diagnostics = filtered_diagnostics
+				return filtered
 			end
-			vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+			
+			return diagnostics
 		end
 
+		-- Override the diagnostic handler to apply our filtering
+		local publish_diagnostics_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
+		vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+			if result and result.diagnostics then
+				result.diagnostics = filter_diagnostics(result.diagnostics)
+			end
+			return publish_diagnostics_handler(err, result, ctx, config)
+		end
+
+		-- Override vim.diagnostic.set to apply our filtering
+		local original_diagnostic_set = vim.diagnostic.set
+		vim.diagnostic.set = function(namespace, bufnr, diagnostics, opts)
+			diagnostics = filter_diagnostics(diagnostics)
+			return original_diagnostic_set(namespace, bufnr, diagnostics, opts)
+		end
+
+		-- Set up LSP servers
 		mason_lspconfig.setup_handlers({
 			function(server_name)
 				lspconfig[server_name].setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 				})
 			end,
 
@@ -77,9 +113,6 @@ return {
 			["grammarly"] = function()
 				lspconfig.grammarly.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						grammarly = {},
 					},
@@ -90,9 +123,6 @@ return {
 			["lua_ls"] = function()
 				lspconfig.lua_ls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						Lua = {
 							diagnostics = { globals = { 'vim' } },
@@ -106,9 +136,6 @@ return {
 			["pylsp"] = function()
 				lspconfig.pylsp.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						pylsp = {
 							plugins = {
@@ -127,9 +154,6 @@ return {
 			["clangd"] = function()
 				lspconfig.clangd.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						clangd = {
                             fallbackFlags = { "-std=c11" },
@@ -142,9 +166,6 @@ return {
 			["bashls"] = function()
 				lspconfig.bashls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						bashls = {},
 					},
@@ -155,9 +176,6 @@ return {
 			["ast_grep"] = function()
 				lspconfig.ast_grep.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						ast_grep = {},
 					},
@@ -168,9 +186,6 @@ return {
 			["harper_ls"] = function()
 				lspconfig.harper_ls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						harper_ls = {},
 					},
@@ -181,9 +196,6 @@ return {
 			["cssls"] = function()
 				lspconfig.cssls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						cssls = {},
 					},
@@ -194,9 +206,6 @@ return {
 			["html"] = function()
 				lspconfig.html.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						html = {},
 					},
@@ -207,9 +216,6 @@ return {
 			["ts_ls"] = function()
 				lspconfig.ts_ls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						ts_ls = {},
 					},
@@ -220,9 +226,6 @@ return {
 			["jsonls"] = function()
 				lspconfig.jsonls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						jsonls = {},
 					},
@@ -233,9 +236,6 @@ return {
 			["vimls"] = function()
 				lspconfig.vimls.setup({
 					capabilities = capabilities,
-                    handlers = {
-                        ['textDocument/publishDiagnostics'] = custom_diagnostics_handler,
-                    },
 					settings = {
 						vimls = {},
 					},
