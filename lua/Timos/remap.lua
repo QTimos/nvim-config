@@ -30,6 +30,10 @@ vim.keymap.set("n", "<leader>Y", "\"+Y")
 vim.keymap.set("n", "<leader>d", "\"_d")
 vim.keymap.set("v", "<leader>d", "\"_d")
 
+vim.keymap.set("n", "<leader><S-l>", ":BufferLineCycleNext<CR>")
+vim.keymap.set("n", "<leader><S-h>", ":BufferLineCyclePrev<CR>")
+vim.keymap.set("n", "<leader><S-n>", ":BufferLinePickClose<CR>")
+
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("n", "<2-MiddleMouse>", "<Nop>")

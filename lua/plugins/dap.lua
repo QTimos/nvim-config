@@ -9,83 +9,61 @@ return {
 		local dapui = require("dapui")
 		dapui.setup()
 		
-		-- vscode-cpptools adapter for C, C++ and Rust
-		dap.adapters.cppdbg = {
-			id = 'cppdbg',
-			type = 'executable',
-			command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7',
+		-- codelldb adapter for C, C++ and Rust (already installed via Mason)
+		dap.adapters.codelldb = {
+			type = 'server',
+			port = "${port}",
+			executable = {
+				command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
+				args = {"--port", "${port}"},
+			}
 		}
-
-		-- vscode-cpptools configuration for C
+		
+		-- Configuration for C
 		dap.configurations.c = {
 			{
 				name = "Launch file",
-				type = "cppdbg",
+				type = "codelldb",
 				request = "launch",
 				program = function()
 					return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
 				end,
 				cwd = '${workspaceFolder}',
-				stopAtEntry = true,
-				setupCommands = {
-					{
-						text = '-enable-pretty-printing',
-						description = 'enable pretty printing',
-						ignoreFailures = false
-					},
-				},
+				stopOnEntry = false,
 			},
 			{
 				name = "Attach to process",
-				type = "cppdbg",
+				type = "codelldb",
 				request = "attach",
-				processId = function()
+				pid = function()
 					local process_picker = require('dap.utils').pick_process
 					return process_picker()
 				end,
-				program = function()
-					return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-				end,
 				cwd = "${workspaceFolder}",
-				setupCommands = {
-					{
-						text = '-enable-pretty-printing',
-						description = 'enable pretty printing',
-						ignoreFailures = false
-					},
-				},
 			},
 			{
 				name = "Attach to gdbserver",
-				type = "cppdbg",
+				type = "codelldb",
 				request = "launch",
-				MIMode = "gdb",
-				miDebuggerServerAddress = "localhost:1234",
-				miDebuggerPath = "/usr/bin/gdb",
 				program = function()
 					return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
 				end,
 				cwd = '${workspaceFolder}',
-				setupCommands = {
-					{
-						text = '-enable-pretty-printing',
-						description = 'enable pretty printing',
-						ignoreFailures = false
-					},
+				initCommands = {
+					'target remote localhost:1234',
 				},
 			},
 		}
-
-		-- the same configuration for C++ and Rust
+		
+		-- Same configurations for C++, Rust, and Zig
 		dap.configurations.cpp = dap.configurations.c
 		dap.configurations.rust = dap.configurations.c
+		dap.configurations.zig = dap.configurations.c
 		
 		-- debugpy for Python
 		dap.adapters.python = function(cb, config)
 			if config.request == "attach" then
-				---@diagnostic disable-next-line: undefined-field
 				local port = (config.connect or config).port
-				---@diagnostic disable-next-line: undefined-field
 				local host = (config.connect or config).host or "127.0.0.1"
 				cb({
 					type = "server",
@@ -98,7 +76,7 @@ return {
 			else
 				cb({
 					type = "executable",
-					command = "/home/timos/.virtualenvs/debugpy/bin/python",
+					command = vim.fn.stdpath('data') .. '/mason/packages/debugpy/venv/bin/python',
 					args = { "-m", "debugpy.adapter" },
 					options = {
 						source_filetype = "python",
@@ -106,12 +84,12 @@ return {
 				})
 			end
 		end
+		
 		dap.configurations.python = {
 			{
 				type = "python",
 				request = "launch",
 				name = "Launch file",
-
 				program = "${file}",
 				pythonPath = function()
 					local cwd = vim.fn.getcwd()
@@ -141,11 +119,21 @@ return {
 		end
 		
 		-- Keymaps
-		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, {})
-		vim.keymap.set("n", "<F1>", dap.continue, {})
-		vim.keymap.set("n", "<F2>", dap.step_into, {})
-		vim.keymap.set("n", "<F3>", dap.step_over, {})
-		vim.keymap.set("n", "<F4>", dap.run_to_cursor, {})
-		vim.keymap.set("n", "<F5>", dap.repl.toggle, {})
+		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+		vim.keymap.set("n", "<leader>B", function()
+			dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
+		end, { desc = "Conditional Breakpoint" })
+		
+		vim.keymap.set("n", "<F1>", dap.continue, { desc = "Debug: Continue" })
+		vim.keymap.set("n", "<F2>", dap.step_into, { desc = "Debug: Step Into" })
+		vim.keymap.set("n", "<F3>", dap.step_over, { desc = "Debug: Step Over" })
+		vim.keymap.set("n", "<F4>", dap.step_out, { desc = "Debug: Step Out" })
+		vim.keymap.set("n", "<F5>", dap.repl.toggle, { desc = "Debug: Toggle REPL" })
+		vim.keymap.set("n", "<F9>", dap.run_to_cursor, { desc = "Debug: Run to Cursor" })
+		vim.keymap.set("n", "<F10>", dap.terminate, { desc = "Debug: Terminate" })
+		
+		-- Additional useful keymaps
+		vim.keymap.set("n", "<leader>du", function() dapui.toggle() end, { desc = "Debug: Toggle UI" })
+		vim.keymap.set("n", "<leader>de", function() dapui.eval() end, { desc = "Debug: Eval" })
 	end,
 }

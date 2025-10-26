@@ -1,7 +1,6 @@
 return {
     {
-        "mason-org/mason.nvim",
-        version = "1.11.0",
+        "williamboman/mason.nvim",
         config = function()
             require("mason").setup({
                 ui = {
@@ -11,47 +10,66 @@ return {
                         package_uninstalled = "✗",
                     },
                 },
-                pip = {
-                    upgrade_pip = true,
+            })
+        end,
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = { "williamboman/mason.nvim" },
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "lua_ls",             -- Lua
+                    "clangd",             -- C/C++
+                    "pylsp",              -- Python
+                    "ts_ls",              -- TypeScript/JavaScript
+                    "bashls",             -- Bash
+                    "jsonls",             -- JSON
+                    "html",               -- HTML
+                    "cssls",              -- CSS
+                    "laravel_ls",         -- PHP
+                    "tailwindcss",        -- Tailwind CSS
+                    "emmet_ls",           -- Emmet
+                    "svelte",             -- Svelte
+                    "astro",              -- Astro
+                    "yamlls",             -- YAML
+                    "graphql",            -- GraphQL
+                    "prismals",           -- Prisma
+                    "dockerls",           -- Docker
+                    "sqlls",              -- SQL
+                    "rust_analyzer",      -- Rust
+                    "gopls",              -- Go
+                    "jdtls",              -- Java
+                    "vimls",              -- VimScript
+                    "marksman",           -- Markdown
+                    "grammarly",          -- Grammar
+                    "harper_ls",          -- Spell check
+                    "kotlin_language_server", -- Kotlin
+                    "vue_ls",             -- Vue-language-server
                 },
             })
         end,
     },
     {
-        "mason-org/mason-lspconfig.nvim",
-        version = "1.32.0",
-        dependencies = {
-            "mason-org/mason.nvim",
-            "neovim/nvim-lspconfig",
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
-        },
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "williamboman/mason.nvim" },
         config = function()
-            local mason_lspconfig = require("mason-lspconfig")
-            local mason_tool_installer = require("mason-tool-installer")
-
-            mason_lspconfig.setup({
-                automatic_installation = true,
-                ensure_installed = {
-                    "asm_lsp",
-                    "bashls",
-                    "clangd",
-                    "ast_grep",
-                    "harper_ls",
-                    "cssls",
-                    "html",
-                    "lua_ls",
-                    "ts_ls",
-                    "jsonls",
-                    "pylsp",
-                    "vimls",
-                    "grammarly"
-                },
-            })
-
-            mason_tool_installer.setup({
+            require("mason-tool-installer").setup({
                 ensure_installed = {
                     "prettier",
+                    "prettierd",
+                    "stylua",
+                    "black",
                     "isort",
+                    "clang-format",
+                    "shfmt",
+                    "eslint_d",
+                    "stylelint",
+                    "shellcheck",
+                    "cpplint",
+                    "pylint",
+                    "debugpy",
+                    "codelldb",
                 },
             })
         end,

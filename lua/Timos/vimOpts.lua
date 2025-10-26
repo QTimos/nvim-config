@@ -1,5 +1,7 @@
 vim.g.mapleader = " "
-vim.g.python3_host_prog = "~/.venv/bin/python"
+vim.g.python3_host_prog = "/usr/bin/python3"
+vim.g.perl_host_prog = "/usr/bin/perl"
+
 
 vim.cmd("set number")
 vim.cmd("set relativenumber")
