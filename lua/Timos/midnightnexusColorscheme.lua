@@ -14,6 +14,8 @@ M.colors = {
 
 function M.setup()
     -- Set terminal colors
+    vim.g.colors_name = "midnightnexus"
+
     vim.g.terminal_color_0  = M.colors.bg
     vim.g.terminal_color_1  = M.colors.red
     vim.g.terminal_color_2  = M.colors.green

@@ -1,9 +1,9 @@
 return {
     {
         name = "midnightnexus",
-        dir = "~/.config/nvim/lua/Timos/",
+        dir = vim.fn.stdpath("config") .. "/lua/Timos/",
         config = function()
-            require('Timos.midnightnexus-colorscheme').setup()
+            require('Timos.midnightnexusColorscheme').setup()
         end,
         lazy = false,
         priority = 1000,
