@@ -18,14 +18,16 @@ local config = {
 }
 
 local function create_float_window()
-    local width = math.floor(vim.o.columns * config.width)
-    local height = math.floor(vim.o.lines * config.height)
+    -- Calculate content dimensions first
+    local total_width = math.floor(vim.o.columns * config.width)
+    local total_height = math.floor(vim.o.lines * config.height)
 
-    local row = math.floor((vim.o.lines - height) / 2)
-    local col = math.floor((vim.o.columns - width) / 2)
+    local content_width = total_width - config.padding.left - config.padding.right - 2 -- -2 for borders
+    local content_height = total_height - config.padding.top - config.padding.bottom - 2 -- -2 for borders
 
-    local content_width = width - config.padding.left - config.padding.right
-    local content_height = height - config.padding.top - config.padding.bottom
+    -- Center based on total dimensions (fixed calculation)
+    local row = math.floor((vim.o.lines - total_height) / 2)
+    local col = math.floor((vim.o.columns - total_width) / 2)
 
     local opts = {
         relative = 'editor',
@@ -59,6 +61,16 @@ local Terminal = {
 }
 
 function Terminal:create()
+    -- Get the directory of the current buffer before creating terminal
+    local current_buf = vim.api.nvim_get_current_buf()
+    local buf_name = vim.api.nvim_buf_get_name(current_buf)
+    local cwd = vim.fn.getcwd()
+    
+    if buf_name ~= "" then
+        -- Get directory of current file
+        cwd = vim.fn.fnamemodify(buf_name, ":p:h")
+    end
+
     if self.buf and vim.api.nvim_buf_is_valid(self.buf) then
         local _, win = create_float_window()
         vim.api.nvim_win_set_buf(win, self.buf)
@@ -69,6 +81,7 @@ function Terminal:create()
         self.win = win
 
         self.job_id = vim.fn.termopen(config.shell or vim.o.shell, {
+            cwd = cwd,
             on_exit = function()
                 if self.win and vim.api.nvim_win_is_valid(self.win) then
                     vim.api.nvim_win_close(self.win, true)
