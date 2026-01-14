@@ -8,7 +8,7 @@ return {
 				-- theme = "nightfly",
 				-- theme = "nordic",
 				theme = "nord",
-                -- theme = "midnightnexus",
+                                -- theme = "midnightnexus",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
