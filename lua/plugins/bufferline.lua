@@ -7,7 +7,7 @@ return {
     config = function()
         require('bufferline').setup {
             options = {
-                mode = 'buffers', -- set to "tabs" to only show tabpages instead
+                mode = 'tabs', --"buffers" -- set to "tabs" to only show tabpages instead
                 themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
                 numbers = 'none', -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
                 close_command = 'Bdelete! %d', -- can be a string | function, see "Mouse actions"
@@ -50,7 +50,10 @@ return {
                     italic = true,
                 },
                 separator_selected = {},
-                -- tab_selected = {},
+                tab_selected = {
+                    bold = true,
+                    italic = true,
+                },
                 -- background = {},
                 -- indicator_selected = {},
                 -- fill = {},

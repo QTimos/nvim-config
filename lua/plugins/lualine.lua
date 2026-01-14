@@ -7,8 +7,8 @@ return {
 				icons_enabled = true,
 				-- theme = "nightfly",
 				-- theme = "nordic",
-				-- theme = "nord",
-                theme = "midnightnexus",
+				theme = "nord",
+                -- theme = "midnightnexus",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {

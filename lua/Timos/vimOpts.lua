@@ -16,9 +16,9 @@ vim.o.backup = false
 
 vim.opt.expandtab = true
 vim.cmd("set autoindent")
-vim.cmd("set tabstop=4")
-vim.cmd("set shiftwidth=4")
-vim.cmd("set softtabstop=4")
+vim.cmd("set tabstop=8")
+vim.cmd("set shiftwidth=8")
+vim.cmd("set softtabstop=8")
 
 vim.cmd("setlocal list")
 

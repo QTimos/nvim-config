@@ -36,8 +36,8 @@ vim.keymap.set("v", "<leader>y", function()
 end, { desc = "Copy selection to host clipboard via SSH" })
 
 
-vim.keymap.set("n", "<leader><S-l>", ":BufferLineCycleNext<CR>")
-vim.keymap.set("n", "<leader><S-h>", ":BufferLineCyclePrev<CR>")
+vim.keymap.set("n", "<leader><A-l>", ":BufferLineCycleNext<CR>")
+vim.keymap.set("n", "<leader><A-h>", ":BufferLineCyclePrev<CR>")
 vim.keymap.set("n", "<leader><S-n>", ":BufferLinePickClose<CR>")
 
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
@@ -61,7 +61,48 @@ vim.keymap.set("n", "<leader>bt", function()
     vim.cmd("cd " .. vim.fn.escape(file_dir, " "))
     vim.cmd("silent !browse " .. vim.fn.escape(file_name, " "))
 end, { noremap = true })
-vim.keymap.set("n", "<leader>bc", ":!compile %:t<CR>")
+-- vim.keymap.set("n", "<leader>bc", ":!compile %:t<CR>")
+vim.keymap.set("n", "<leader>bc", function()
+    local current_file = vim.fn.expand("%:p:r")  -- Full path without extension
+    local extra_files = vim.fn.input({
+        prompt = "Additional files (space-separated, or Enter for none): ",
+        completion = "file"
+    })
+
+    local compile_cmd
+    if extra_files == "" then
+        compile_cmd = "compile " .. current_file
+    else
+        compile_cmd = "compile " .. current_file .. " " .. extra_files
+    end
+
+    local buf = vim.api.nvim_create_buf(false, true)
+    local width = math.floor(vim.o.columns * 0.8)
+    local height = math.floor(vim.o.lines * 0.8)
+    local row = math.floor((vim.o.lines - height) / 2)
+    local col = math.floor((vim.o.columns - width) / 2)
+
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = width,
+        height = height,
+        row = row,
+        col = col,
+        style = "minimal",
+        border = "rounded"
+    })
+    vim.fn.termopen(compile_cmd, {
+        on_exit = function(_, exit_code)
+            if exit_code == 0 then
+                print("Compilation and execution successful!")
+            else
+                print("Exit code: " .. exit_code)
+            end
+        end
+    })
+    vim.cmd("startinsert")
+    vim.api.nvim_buf_set_keymap(buf, "n", "q", ":close<CR>", { noremap = true, silent = true })
+end)
 vim.keymap.set("n", "<leader>r", ":!python %:t<CR>")
 
 vim.keymap.set("n", "<Leader>n", ":next <CR>")
