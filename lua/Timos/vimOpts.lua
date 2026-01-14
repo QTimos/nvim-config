@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
-vim.g.python3_host_prog = "/usr/bin/python3"
+-- vim.g.python3_host_prog = "/usr/bin/python3"
+vim.g.python3_host_prog = "/home/hdyani/.local/bin/pynvim-python"
 vim.g.perl_host_prog = "/usr/bin/perl"
 
 
