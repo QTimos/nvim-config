@@ -6,6 +6,9 @@ return {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
 		"MunifTanjim/nui.nvim",
+                "3rd/image.nvim",
+                "antosha417/nvim-lsp-file-operations",
+                "s1n7ax/nvim-window-picker",
 	},
 	config = function()
 		local tree = require("neo-tree")
