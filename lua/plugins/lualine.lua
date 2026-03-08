@@ -6,9 +6,8 @@ return {
 			options = {
 				icons_enabled = true,
 				-- theme = "nightfly",
-
-				theme = "nord",
-                                theme = "midnightnexus",
+				-- theme = "nord",
+				theme = "midnightnexus",
 				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 				disabled_filetypes = {
@@ -46,5 +45,5 @@ return {
 			inactive_winbar = {},
 			extensions = {},
 		})
-	end
+	end,
 }

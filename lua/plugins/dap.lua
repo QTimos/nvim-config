@@ -8,17 +8,17 @@ return {
 		local dap = require("dap")
 		local dapui = require("dapui")
 		dapui.setup()
-		
+
 		-- codelldb adapter for C, C++ and Rust (already installed via Mason)
 		dap.adapters.codelldb = {
-			type = 'server',
+			type = "server",
 			port = "${port}",
 			executable = {
-				command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
-				args = {"--port", "${port}"},
-			}
+				command = vim.fn.stdpath("data") .. "/mason/bin/codelldb",
+				args = { "--port", "${port}" },
+			},
 		}
-		
+
 		-- Configuration for C
 		dap.configurations.c = {
 			{
@@ -26,9 +26,9 @@ return {
 				type = "codelldb",
 				request = "launch",
 				program = function()
-					return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
 				end,
-				cwd = '${workspaceFolder}',
+				cwd = "${workspaceFolder}",
 				stopOnEntry = false,
 			},
 			{
@@ -36,7 +36,7 @@ return {
 				type = "codelldb",
 				request = "attach",
 				pid = function()
-					local process_picker = require('dap.utils').pick_process
+					local process_picker = require("dap.utils").pick_process
 					return process_picker()
 				end,
 				cwd = "${workspaceFolder}",
@@ -46,20 +46,20 @@ return {
 				type = "codelldb",
 				request = "launch",
 				program = function()
-					return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
 				end,
-				cwd = '${workspaceFolder}',
+				cwd = "${workspaceFolder}",
 				initCommands = {
-					'target remote localhost:1234',
+					"target remote localhost:1234",
 				},
 			},
 		}
-		
+
 		-- Same configurations for C++, Rust, and Zig
 		dap.configurations.cpp = dap.configurations.c
 		dap.configurations.rust = dap.configurations.c
 		dap.configurations.zig = dap.configurations.c
-		
+
 		-- debugpy for Python
 		dap.adapters.python = function(cb, config)
 			if config.request == "attach" then
@@ -76,7 +76,7 @@ return {
 			else
 				cb({
 					type = "executable",
-					command = vim.fn.stdpath('data') .. '/mason/packages/debugpy/venv/bin/python',
+					command = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python",
 					args = { "-m", "debugpy.adapter" },
 					options = {
 						source_filetype = "python",
@@ -84,7 +84,7 @@ return {
 				})
 			end
 		end
-		
+
 		dap.configurations.python = {
 			{
 				type = "python",
@@ -103,7 +103,7 @@ return {
 				end,
 			},
 		}
-		
+
 		-- UI listeners
 		dap.listeners.before.attach.dapui_config = function()
 			dapui.open()
@@ -117,13 +117,13 @@ return {
 		dap.listeners.before.event_exited.dapui_config = function()
 			dapui.close()
 		end
-		
+
 		-- Keymaps
 		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
 		vim.keymap.set("n", "<leader>B", function()
-			dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
+			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Conditional Breakpoint" })
-		
+
 		vim.keymap.set("n", "<F1>", dap.continue, { desc = "Debug: Continue" })
 		vim.keymap.set("n", "<F2>", dap.step_into, { desc = "Debug: Step Into" })
 		vim.keymap.set("n", "<F3>", dap.step_over, { desc = "Debug: Step Over" })
@@ -131,9 +131,13 @@ return {
 		vim.keymap.set("n", "<F5>", dap.repl.toggle, { desc = "Debug: Toggle REPL" })
 		vim.keymap.set("n", "<F9>", dap.run_to_cursor, { desc = "Debug: Run to Cursor" })
 		vim.keymap.set("n", "<F10>", dap.terminate, { desc = "Debug: Terminate" })
-		
+
 		-- Additional useful keymaps
-		vim.keymap.set("n", "<leader>du", function() dapui.toggle() end, { desc = "Debug: Toggle UI" })
-		vim.keymap.set("n", "<leader>de", function() dapui.eval() end, { desc = "Debug: Eval" })
+		vim.keymap.set("n", "<leader>du", function()
+			dapui.toggle()
+		end, { desc = "Debug: Toggle UI" })
+		vim.keymap.set("n", "<leader>de", function()
+			dapui.eval()
+		end, { desc = "Debug: Eval" })
 	end,
 }

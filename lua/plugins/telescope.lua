@@ -14,26 +14,26 @@ return {
 				builtin.grep_string({ search = vim.fn.input("Grep > ") })
 			end)
 			vim.keymap.set("n", "<leader>AZ", function()
-					builtin.find_files({
-						attach_mappings = function(prompt_bufnr, _)
-							vim.defer_fn(function ()
-								actions.select_vertical(prompt_bufnr)
-							end,20)
-							return true
-						end,
-					})
-				end, { desc = "Telescope find files and open in vsplit" })
+				builtin.find_files({
+					attach_mappings = function(prompt_bufnr, _)
+						vim.defer_fn(function()
+							actions.select_vertical(prompt_bufnr)
+						end, 20)
+						return true
+					end,
+				})
+			end, { desc = "Telescope find files and open in vsplit" })
 			vim.keymap.set("n", "<leader>ZA", function()
-					builtin.find_files({
-						attach_mappings = function(prompt_bufnr, _)
-							vim.defer_fn(function ()
-								actions.select_horizontal(prompt_bufnr)
-							end,20)
-							return true
-						end,
-					})
-				end, { desc = "Telescope find files and open in vsplit" })
-		end
+				builtin.find_files({
+					attach_mappings = function(prompt_bufnr, _)
+						vim.defer_fn(function()
+							actions.select_horizontal(prompt_bufnr)
+						end, 20)
+						return true
+					end,
+				})
+			end, { desc = "Telescope find files and open in vsplit" })
+		end,
 	},
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
