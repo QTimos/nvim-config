@@ -10,6 +10,10 @@ return {
 			-- Format on save (optional: remove if you prefer manual formatting)
 			on_attach = function(client, bufnr)
 				if client.supports_method("textDocument/formatting") then
+					local ft = vim.bo[bufnr].filetype
+					if ft == "c" or ft == "cpp" then
+						return
+					end
 					vim.api.nvim_create_autocmd("BufWritePre", {
 						buffer = bufnr,
 						callback = function()
