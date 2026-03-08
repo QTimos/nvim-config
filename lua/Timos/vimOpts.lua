@@ -15,6 +15,10 @@ vim.g.perl_host_prog = "/usr/bin/perl"
 vim.opt.number = true
 vim.opt.relativenumber = true
 
+-- fold things
+vim.opt.foldmethod = "manual"
+vim.opt.foldlevel = 99
+
 -- Columns / layout
 vim.opt.colorcolumn = "120" -- 200 is very wide; 120 is more conventional
 vim.opt.signcolumn = "yes" -- always show, prevents layout jumps

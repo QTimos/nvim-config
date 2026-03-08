@@ -123,3 +123,9 @@ vim.keymap.set("n", "<leader>man", ":!man <cword><CR>", { desc = "Man page for w
 
 -- ─── Quick-escape terminal mode ───────────────────────────────────────────────
 vim.keymap.set("t", "<Leader><Esc>", "<C-\\><C-n> :q! <CR>", { desc = "Exit terminal mode" })
+
+vim.keymap.set("n", "<A-BS>", "zf")
+vim.keymap.set("n", "<BS>", "za")
+vim.keymap.set("v", "<BS>", "za")
+vim.keymap.set("n", "<C-BS>", "zR")
+vim.keymap.set("n", "<Leader><BS>", "zE")
