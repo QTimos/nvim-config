@@ -207,7 +207,7 @@ return {
 			},
 			yamlls = {
 				cmd = { "yaml-language-server", "--stdio" },
-				filetypes = { "yaml", "yml" },
+				filetypes = { "yaml" },
 				root_markers = { ".git" },
 			},
 			graphql = {
@@ -237,7 +237,7 @@ return {
 			},
 			gopls = {
 				cmd = { "gopls" },
-				filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				filetypes = { "go", "gomod" },
 				root_markers = { "go.mod", ".git" },
 			},
 			jdtls = {
@@ -257,7 +257,7 @@ return {
 			},
 			grammarly = {
 				cmd = { "grammarly-languageserver", "--stdio" },
-				filetypes = { "markdown", "tex", "latex", "plaintext" },
+				filetypes = { "markdown", "tex", "text" },
 				root_markers = { ".git" },
 			},
 			harper_ls = {

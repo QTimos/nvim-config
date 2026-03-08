@@ -4,7 +4,10 @@ return {
 	lazy = false,
 	build = ":TSUpdate",
 	config = function()
-		require("nvim-treesitter.configs").setup({
+		-- nvim-treesitter v1.0+ API (configs module was removed)
+		vim.treesitter.language.register("markdown", "mdx")
+
+		require("nvim-treesitter").setup({
 			ensure_installed = {
 				"bash",
 				"c",
@@ -31,9 +34,12 @@ return {
 				"vimdoc",
 				"yaml",
 			},
-			auto_install = true,
-			highlight = { enable = true },
-			indent = { enable = true },
 		})
+
+		-- Highlight and indent are enabled by default in v1.0,
+		-- but can be explicitly set via vim options:
+		vim.opt.foldmethod = "expr"
+		vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+		vim.opt.foldenable = false -- don't fold on open
 	end,
 }

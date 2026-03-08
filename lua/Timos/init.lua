@@ -89,7 +89,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- ─── Highlight yanked text briefly ───────────────────────────────────────────
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
-		vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
+		vim.hl.on_yank({ higroup = "Visual", timeout = 150 })
 	end,
 })
 

@@ -5,6 +5,10 @@ return {
 		local wk = require("which-key")
 		wk.setup({
 			delay = 400,
+			notify = false,
+			icons = {
+				rules = false,
+			},
 		})
 		-- Register key group labels so which-key shows nice descriptions
 		wk.add({
